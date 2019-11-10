@@ -22,15 +22,14 @@ namespace NETCore3
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
+            app.UseRouting()
+                .UseEndpoints(endpoints =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    endpoints.MapGet("/api", async context =>
+                    {
+                        await context.Response.WriteAsync($"API is running on {env.EnvironmentName} environment");
+                    });
                 });
-            });
         }
     }
 }
