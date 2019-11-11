@@ -85,6 +85,24 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+## 4. Define health check
+
+### Turn on health checks
+``` C#
+public void ConfigureServices(IServiceCollection services)
+{
+	services.AddHealthChecks();
+}
+
+public void Configure(IApplicationBuilder app)
+{
+	app.UseRouting()
+		.UseEndpoints(endpoints =>
+		{
+			endpoints.MapHealthChecks("/health");
+		});
+}
+```
 
 
 

@@ -3,6 +3,9 @@
 ### API Info
 GET {{api_url}}/api
 
+### Health check
+GET {{api_url}}/health
+
 ### Get all team members
 # @name getAllTeamMembers
 GET {{api_url}}/api/team-members
@@ -28,11 +31,11 @@ PUT {{api_url}}/api/team-members HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "b214e1bc-f837-4f56-bdc9-0ea6cb366c31",
+    "id": "8ce7c22b-5fcc-49fb-9bb2-fe7db6f263d1",
     "name": "Jonass",
     "role": "JavaScript",
     "grade": "9"
 }
 
 ### Delete team member
-DELETE {{api_url}}/api/team-members/f6fe0033-1bd6-4c87-8d9e-56458c43011e HTTP/1.1
+DELETE {{api_url}}/api/team-members/8ce7c22b-5fcc-49fb-9bb2-fe7db6f263d1 HTTP/1.1

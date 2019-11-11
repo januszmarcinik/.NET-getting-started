@@ -21,6 +21,8 @@ namespace NETCore3
                     options.SerializerSettings.ContractResolver =
                         new CamelCasePropertyNamesContractResolver());
 
+            services.AddHealthChecks();
+
             services.AddSingleton<ITeamMembersService>(factory =>
             {
                 var initTeamMembers = new []
@@ -47,6 +49,7 @@ namespace NETCore3
                 //.UseTeamMembersEndpoints()
                 .UseEndpoints(endpoints =>
                 {
+                    endpoints.MapHealthChecks("/health");
                     endpoints.MapControllers();
                 });
         }
