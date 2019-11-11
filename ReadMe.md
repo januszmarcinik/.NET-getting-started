@@ -159,6 +159,55 @@ public class TeamMembersController : ControllerBase
 }
 ```
 
+## 6. Exception handler middleware
+
+Once the logger is already defined, we could log each exception in the API, and as a response send back only an error message.
+
+### Middleware registration
+```C#
+public void Configure(IApplicationBuilder app)
+{
+	app.UseMiddleware<ExceptionHandlerMiddleware>();
+}
+```
+
+[ExceptionHandlerMiddleware](Middleware/ExceptionHandlerMiddleware.cs)
+```C#
+internal class ExceptionHandlerMiddleware
+{
+	private readonly RequestDelegate _request;
+	private readonly ILogger _logger;
+
+	public ExceptionHandlerMiddleware(RequestDelegate request, ILogger<ExceptionHandlerMiddleware> logger)
+	{
+		_request = request;
+		_logger = logger;
+	}
+
+	public async Task InvokeAsync(HttpContext context)
+	{
+		try
+		{
+			await _request(context);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, ex.Message);
+			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+			await context.Response.WriteAsync(ex.Message);
+		}
+	}
+}
+```
+
+## 7. 
+
+## 8. 
+
+## 9.
+
+## 10.
+
 
 #### TODO:
 - Autofac

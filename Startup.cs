@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NETCore3.Configuration;
 using NETCore3.Entities;
+using NETCore3.Middleware;
 using NETCore3.Services;
 using Newtonsoft.Json.Serialization;
 
@@ -43,6 +44,8 @@ namespace NETCore3
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseRouting()
                 .UseApiInfoEndpoint(env)
