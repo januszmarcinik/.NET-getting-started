@@ -9,7 +9,7 @@ GET {{api_url}}/api/team-members
 Content-Type: application/json
 
 ### Get team member by id
-@team_member_id = f6fe0033-1bd6-4c87-8d9e-56458c43011e
+@team_member_id = 37eabf45-8736-49c4-90e1-af2a7d5653cc
 GET {{api_url}}/api/team-members/{{team_member_id}}
 
 ### Create team member

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using NETCore3.Configuration;
 using NETCore3.Entities;
 using NETCore3.Services;
+using Newtonsoft.Json.Serialization;
 
 namespace NETCore3
 {
@@ -15,6 +16,11 @@ namespace NETCore3
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ContractResolver =
+                        new CamelCasePropertyNamesContractResolver());
+
             services.AddSingleton<ITeamMembersService>(factory =>
             {
                 var initTeamMembers = new []
@@ -38,7 +44,11 @@ namespace NETCore3
 
             app.UseRouting()
                 .UseApiInfoEndpoint(env)
-                .UseTeamMembersEndpoints();
+                //.UseTeamMembersEndpoints()
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
         }
     }
 }

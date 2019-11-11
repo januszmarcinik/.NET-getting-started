@@ -4,7 +4,7 @@ using NETCore3.Entities;
 
 namespace NETCore3.Services
 {
-    internal interface ITeamMembersService
+    public interface ITeamMembersService
     {
         TeamMember GetById(Guid id);
         
