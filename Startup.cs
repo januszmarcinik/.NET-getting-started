@@ -1,4 +1,6 @@
 using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +16,8 @@ namespace NETCore3
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public ILifetimeScope AutofacContainer { get; private set; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
@@ -24,23 +26,30 @@ namespace NETCore3
                         new CamelCasePropertyNamesContractResolver());
 
             services.AddHealthChecks();
-
-            services.AddSingleton<ITeamMembersService>(factory =>
-            {
-                var initTeamMembers = new []
-                {
-                    new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
-                    new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
-                    new TeamMember(Guid.NewGuid(), "Robert", Role.JavaScript, 2),
-                    new TeamMember(Guid.NewGuid(), "Alex", Role.DevOps, 5)
-                };
-                return new TeamMembersService(initTeamMembers);
-            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder
+                .Register(factory =>
+                {
+                    var initTeamMembers = new[]
+                    {
+                        new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
+                        new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
+                        new TeamMember(Guid.NewGuid(), "Robert", Role.JavaScript, 2),
+                        new TeamMember(Guid.NewGuid(), "Alex", Role.DevOps, 5)
+                    };
+                    return new TeamMembersService(initTeamMembers);
+                })
+                .As<ITeamMembersService>()
+                .SingleInstance();
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

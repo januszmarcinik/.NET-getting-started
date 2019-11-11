@@ -250,8 +250,57 @@ Example:
 [14:54:49 INF] HTTP POST /api/team-members responded 202 in 468.0278 ms
 ```
 
+## 8. Replace default dependency injection container to Autofac
 
-## 8. 
+### Reference nuget packages
+```XML
+<PackageReference Include="Autofac" Version="4.9.4" />
+<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+```
+
+### Override the factory used to create the service provider
+```C#
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+	Host.CreateDefaultBuilder(args)
+		.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+		// ...
+```
+
+### Move services registration to additional ``Startup`` method called ``ConfigureContainer``
+```C#
+public void ConfigureContainer(ContainerBuilder builder)
+{
+	builder
+		.Register(factory =>
+		{
+			var initTeamMembers = new[]
+			{
+				new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
+				new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
+				new TeamMember(Guid.NewGuid(), "Robert", Role.JavaScript, 2),
+				new TeamMember(Guid.NewGuid(), "Alex", Role.DevOps, 5)
+			};
+			return new TeamMembersService(initTeamMembers);
+		})
+		.As<ITeamMembersService>()
+		.SingleInstance();
+}
+```
+> ConfigureContainer is where you can register things directly with Autofac.  
+This runs after ConfigureServices so the things here will override registrations made in ConfigureServices.  
+Don't build the container - that gets done for you by the factory.
+
+> **HINT:** If, for some reason, you need a reference to the built container, you can use the convenience extension method ``GetAutofacRoot``.
+```C#
+public ILifetimeScope AutofacContainer { get; private set; }
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+	
+	AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+}
+```
+
 
 ## 9.
 
@@ -259,7 +308,6 @@ Example:
 
 
 #### TODO:
-- Autofac
 - Swagger
 - SignalR
 - MVC
@@ -269,3 +317,4 @@ Example:
 - Authorization
 - CORS
 - C# 8
+- Multiple web apps in one process
