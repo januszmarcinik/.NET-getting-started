@@ -104,6 +104,60 @@ public void Configure(IApplicationBuilder app)
 }
 ```
 
+## 5. Logging
+
+>.NET Core supports a logging API that works with a variety of built-in and third-party logging providers.  
+
+There is an abstraction for it: ``ILogger<TCategoryName>``
+
+The default ASP.NET Core project templates call CreateDefaultBuilder, which adds the following logging providers:  
+- Console
+- Debug
+- EventSource
+- EventLog (only when running on Windows)
+
+You can replace the default providers with your own choices. Call ``ClearProviders``, and add the providers you want.
+```C#
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+	Host.CreateDefaultBuilder(args)
+		.ConfigureLogging(logging =>
+		{
+			logging.ClearProviders();
+			logging.AddConsole();
+		})
+		// ...
+```
+
+### Create logs - usage
+```C#
+[Route("api/team-members")]
+public class TeamMembersController : ControllerBase
+{
+	private readonly ITeamMembersService _service;
+	private readonly ILogger _logger;
+
+	public TeamMembersController(ITeamMembersService service, ILogger<TeamMembersController> logger)
+	{
+		_service = service;
+		_logger = logger;
+	}
+
+	// ...
+
+	[HttpPost]
+	public IActionResult Post([FromBody] TeamMember teamMember)
+	{
+		var id = _service.Add(teamMember);
+		return Accepted($"Successfully created team member with id '{id}'.");
+	}
+
+	public override AcceptedResult Accepted(string message)
+	{
+		_logger.LogDebug(message);
+		return Accepted(value: message);
+	}
+}
+```
 
 
 #### TODO:
@@ -111,7 +165,6 @@ public void Configure(IApplicationBuilder app)
 - Swagger
 - SignalR
 - MVC
-- Health check
 - Razor
 - Blazor
 - Authentication

@@ -31,7 +31,7 @@ PUT {{api_url}}/api/team-members HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "8ce7c22b-5fcc-49fb-9bb2-fe7db6f263d1",
+    "id": "29b3eae6-2e55-4218-92af-06b9fb20adfa",
     "name": "Jonass",
     "role": "JavaScript",
     "grade": "9"

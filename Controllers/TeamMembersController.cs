@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NETCore3.Entities;
 using NETCore3.Services;
 
@@ -9,10 +10,12 @@ namespace NETCore3.Controllers
     public class TeamMembersController : ControllerBase
     {
         private readonly ITeamMembersService _service;
+        private readonly ILogger _logger;
 
-        public TeamMembersController(ITeamMembersService service)
+        public TeamMembersController(ITeamMembersService service, ILogger<TeamMembersController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -27,21 +30,27 @@ namespace NETCore3.Controllers
         public IActionResult Post([FromBody] TeamMember teamMember)
         {
             var id = _service.Add(teamMember);
-            return Accepted(value: $"Successfully created team member with id '{id}'.");
+            return Accepted($"Successfully created team member with id '{id}'.");
         }
 
         [HttpPut]
         public IActionResult Put([FromBody] TeamMember teamMember)
         {
             _service.Update(teamMember);
-            return Accepted(value: "Successfully updated team member.");
+            return Accepted("Successfully updated team member.");
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
             _service.Remove(id);
-            return Accepted(value: "Successfully deleted team member.");
+            return Accepted("Successfully deleted team member.");
+        }
+
+        public override AcceptedResult Accepted(string message)
+        {
+            _logger.LogDebug(message);
+            return Accepted(value: message);
         }
     }
 }
