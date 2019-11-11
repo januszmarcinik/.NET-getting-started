@@ -49,7 +49,7 @@ namespace NETCore3.Controllers
 
         public override AcceptedResult Accepted(string message)
         {
-            _logger.LogDebug(message);
+            _logger.LogInformation(message);
             return Accepted(value: message);
         }
     }

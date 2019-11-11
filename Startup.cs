@@ -8,6 +8,7 @@ using NETCore3.Entities;
 using NETCore3.Middleware;
 using NETCore3.Services;
 using Newtonsoft.Json.Serialization;
+using Serilog;
 
 namespace NETCore3
 {
@@ -46,6 +47,8 @@ namespace NETCore3
             }
 
             app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting()
                 .UseApiInfoEndpoint(env)

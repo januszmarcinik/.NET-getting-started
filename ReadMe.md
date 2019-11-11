@@ -200,7 +200,56 @@ internal class ExceptionHandlerMiddleware
 }
 ```
 
-## 7. 
+## 7. Override default logger (Serilog)
+
+### Add required packages to ``.csproj`` file
+```XML
+<PackageReference Include="Serilog" Version="2.9.0" />
+<PackageReference Include="Serilog.AspNetCore" Version="3.1.0" />
+<PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+```
+
+> Serilog completely replaces the logging implementation on .NET Core: it’s not just a provider that works side-by-side with the built-in logging, but rather, an alternative implementation of the .NET Core logging APIs.
+
+That's why we can safely remvoe ``Logging`` configuration from ``appsettings.json``.
+
+### Creating an instance of the logger
+```c#
+public static void Main(string[] args)
+{
+	Log.Logger = new LoggerConfiguration()
+		.Enrich.FromLogContext()
+		.WriteTo.Console()
+		.CreateLogger();
+
+	try
+	{
+		Log.Information("Starting up");
+		CreateHostBuilder(args).Build().Run();
+	}
+	catch (Exception ex)
+	{
+		Log.Fatal(ex, "Host builder error");
+	}
+	finally
+	{
+		Log.CloseAndFlush();
+	}
+}
+```
+
+### Add HTTP Request logging
+```C#
+public void Configure(IApplicationBuilder app)
+{
+	app.UseSerilogRequestLogging();
+}
+```
+Example:
+```
+[14:54:49 INF] HTTP POST /api/team-members responded 202 in 468.0278 ms
+```
+
 
 ## 8. 
 
