@@ -1,3 +1,38 @@
 @api_url = http://localhost:5000
 
+### API Info
 GET {{api_url}}/api
+
+### Get all team members
+# @name getAllTeamMembers
+GET {{api_url}}/api/team-members
+Content-Type: application/json
+
+### Get team member by id
+@team_member_id = f6fe0033-1bd6-4c87-8d9e-56458c43011e
+GET {{api_url}}/api/team-members/{{team_member_id}}
+
+### Create team member
+# @name createTeamMember
+POST {{api_url}}/api/team-members HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Bartek",
+    "role": "DevOps",
+    "grade": "7"
+}
+
+### Update team member
+PUT {{api_url}}/api/team-members HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "b214e1bc-f837-4f56-bdc9-0ea6cb366c31",
+    "name": "Jonass",
+    "role": "JavaScript",
+    "grade": "9"
+}
+
+### Delete team member
+DELETE {{api_url}}/api/team-members/f6fe0033-1bd6-4c87-8d9e-56458c43011e HTTP/1.1

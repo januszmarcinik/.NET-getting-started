@@ -1,8 +1,11 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NETCore3.Configuration;
+using NETCore3.Entities;
+using NETCore3.Services;
 
 namespace NETCore3
 {
@@ -12,6 +15,17 @@ namespace NETCore3
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ITeamMembersService>(factory =>
+            {
+                var initTeamMembers = new []
+                {
+                    new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
+                    new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
+                    new TeamMember(Guid.NewGuid(), "Robert", Role.JavaScript, 2),
+                    new TeamMember(Guid.NewGuid(), "Alex", Role.DevOps, 5)
+                };
+                return new TeamMembersService(initTeamMembers);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -23,13 +37,8 @@ namespace NETCore3
             }
 
             app.UseRouting()
-                .UseEndpoints(endpoints =>
-                {
-                    endpoints.MapGet("/api", async context =>
-                    {
-                        await context.Response.WriteAsync($"API is running on {env.EnvironmentName} environment");
-                    });
-                });
+                .UseApiInfoEndpoint(env)
+                .UseTeamMembersEndpoints();
         }
     }
 }
