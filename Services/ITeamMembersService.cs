@@ -14,6 +14,6 @@ namespace NETCore3.Services
         
         void Update(TeamMember teamMember);
         
-        void Remove(Guid id);
+        void Remove(TeamMember teamMember);
     }
 }

@@ -7,23 +7,15 @@ namespace NETCore3.Services
 {
     internal class TeamMembersService : ITeamMembersService
     {
-        private readonly List<TeamMember> _teamMembers;
+        private readonly HashSet<TeamMember> _teamMembers;
 
         public TeamMembersService(params TeamMember[] initTeamMembers)
         {
-            _teamMembers = new List<TeamMember>(initTeamMembers);
+            _teamMembers = new HashSet<TeamMember>(initTeamMembers);
         }
 
-        public TeamMember GetById(Guid id)
-        {
-            var teamMember = _teamMembers.SingleOrDefault(x => x.Id == id);
-            if (teamMember == null)
-            {
-                throw new InvalidOperationException($"Team member with given id '{id}' does not exist.");
-            }
-
-            return teamMember;
-        }
+        public TeamMember GetById(Guid id) => 
+            _teamMembers.SingleOrDefault(x => x.Id == id);
 
         public IEnumerable<TeamMember> GetAll() =>
             _teamMembers
@@ -38,14 +30,11 @@ namespace NETCore3.Services
 
         public void Update(TeamMember teamMember)
         {
-            Remove(teamMember.Id);
+            Remove(teamMember);
             Add(teamMember);
         }
 
-        public void Remove(Guid id)
-        {
-            var teamMember = GetById(id);
+        public void Remove(TeamMember teamMember) => 
             _teamMembers.Remove(teamMember);
-        }
     }
 }

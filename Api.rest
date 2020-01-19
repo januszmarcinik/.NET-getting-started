@@ -12,7 +12,7 @@ GET {{api_url}}/api/team-members
 Content-Type: application/json
 
 ### Get team member by id
-@team_member_id = 37eabf45-8736-49c4-90e1-af2a7d5653cc
+@team_member_id = 6efe9d3b-4d7c-47b1-8bdb-d870617f8ae6
 GET {{api_url}}/api/team-members/{{team_member_id}}
 
 ### Create team member
@@ -21,7 +21,7 @@ POST {{api_url}}/api/team-members HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Bartek",
+    "name": "Thomas",
     "role": "DevOps",
     "grade": "7"
 }
@@ -31,7 +31,7 @@ PUT {{api_url}}/api/team-members HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "29b3eae6-2e55-4218-92af-06b9fb20adfa",
+    "id": "33eb9a1c-33f0-4533-954a-2e880d06f8c0",
     "name": "Jonass",
     "role": "JavaScript",
     "grade": "9"

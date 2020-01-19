@@ -17,7 +17,7 @@ namespace NETCore3.Configuration
                 .UseEndpoints(endpoints =>
                 {
                     var service = endpoints.ServiceProvider.GetService<ITeamMembersService>();
-
+                    
                     endpoints.MapGet(UrlPrefix, async context =>
                     {
                         var teamMembers = service.GetAll();
@@ -29,6 +29,11 @@ namespace NETCore3.Configuration
                     {
                         var id = GetIdFromRoute(context.Request.RouteValues["id"]);
                         var teamMember = service.GetById(id);
+                        if (teamMember == null)
+                        {
+                            await context.WriteNotFound($"Team member with given id '{id}' does not exist.");
+                            return;
+                        }
 
                         await context.WriteOk(teamMember);
                     });
@@ -38,7 +43,7 @@ namespace NETCore3.Configuration
                         var command = await context.GetObjectFromBody<TeamMember>();
                         var id = service.Add(command);
 
-                        await context.WriteAccepted($"Successfully created team member with id '{id}'.");
+                        await context.WriteOk($"Successfully created team member with id '{id}'.");
                     });
 
                     endpoints.MapPut(UrlPrefix, async context =>
@@ -46,15 +51,21 @@ namespace NETCore3.Configuration
                         var command = await context.GetObjectFromBody<TeamMember>();
                         service.Update(command);
 
-                        await context.WriteAccepted("Successfully updated team member.");
+                        await context.WriteOk("Successfully updated team member.");
                     });
 
                     endpoints.MapDelete($"{UrlPrefix}/{{id}}", async context =>
                     {
                         var id = GetIdFromRoute(context.Request.RouteValues["id"]);
-                        service.Remove(id);
-
-                        await context.WriteAccepted("Successfully deleted team member.");
+                        var teamMember = service.GetById(id);
+                        if (teamMember == null)
+                        {
+                            await context.WriteNotFound($"Team member with given id '{id}' does not exist.");
+                            return;
+                        }
+                        
+                        service.Remove(teamMember);
+                        await context.WriteOk("Successfully deleted team member.");
                     });
                 });
         }

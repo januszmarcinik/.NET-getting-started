@@ -211,7 +211,7 @@ internal class ExceptionHandlerMiddleware
 
 > Serilog completely replaces the logging implementation on .NET Core: it’s not just a provider that works side-by-side with the built-in logging, but rather, an alternative implementation of the .NET Core logging APIs.
 
-That's why we can safely remvoe ``Logging`` configuration from ``appsettings.json``.
+That's why we can safely remove ``Logging`` configuration from ``appsettings.json``.
 
 ### Creating an instance of the logger
 ```c#

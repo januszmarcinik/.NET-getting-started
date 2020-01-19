@@ -11,16 +11,10 @@ namespace NETCore3.Extensions
         public static Task WriteOk(this HttpContext context, object value) =>
             WriteWithStatus(context, value, HttpStatusCode.OK);
 
-        public static Task WriteAccepted(this HttpContext context, string value) =>
-            WriteWithStatus(context, value, HttpStatusCode.Accepted);
-
         public static Task WriteNotFound(this HttpContext context, object value) =>
             WriteWithStatus(context, value, HttpStatusCode.NotFound);
 
-        public static Task WriteBadRequest(this HttpContext context, object value) =>
-            WriteWithStatus(context, value, HttpStatusCode.BadRequest);
-
-        public static Task WriteWithStatus(this HttpContext context, object value, HttpStatusCode statusCode)
+        private static Task WriteWithStatus(this HttpContext context, object value, HttpStatusCode statusCode)
         {
             context.Response.StatusCode = (int)statusCode;
             var result = value switch

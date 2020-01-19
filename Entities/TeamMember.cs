@@ -5,6 +5,8 @@ namespace NETCore3.Entities
 {
     public class TeamMember
     {
+       
+
         private string _name;
         private Role _role;
         private int _grade;
@@ -47,5 +49,19 @@ namespace NETCore3.Entities
                 _grade = value;
             }
         }
+
+        private bool Equals(TeamMember other) => 
+            Id == other.Id;
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((TeamMember) obj);
+        }
+
+        public override int GetHashCode() => 
+            Id.GetHashCode();
     }
 }

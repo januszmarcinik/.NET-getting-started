@@ -23,13 +23,24 @@ namespace NETCore3.Controllers
             Ok(_service.GetAll());
 
         [HttpGet("{id}")]
-        public IActionResult GetById(Guid id) =>
-            Ok(_service.GetById(id));
+        public IActionResult GetById(Guid id)
+        {
+            var teamMember = _service.GetById(id);
+            if (teamMember == null)
+            {
+                _logger.LogError("Team member with given id {ID} does not exist", id);
+                return NotFound($"Team member with given id '{id}' does not exist.");
+            }
+
+            return Ok(teamMember);
+        }
 
         [HttpPost]
         public IActionResult Post([FromBody] TeamMember teamMember)
         {
             var id = _service.Add(teamMember);
+            
+            _logger.LogInformation("Successfully created team member with id {ID}", id);
             return Accepted($"Successfully created team member with id '{id}'.");
         }
 
@@ -37,20 +48,27 @@ namespace NETCore3.Controllers
         public IActionResult Put([FromBody] TeamMember teamMember)
         {
             _service.Update(teamMember);
-            return Accepted("Successfully updated team member.");
+            
+            const string message = "Successfully updated team member."; 
+            _logger.LogInformation(message);
+            return Ok(message);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            _service.Remove(id);
-            return Accepted("Successfully deleted team member.");
-        }
+            var teamMember = _service.GetById(id);
+            if (teamMember == null)
+            {
+                _logger.LogError("Team member with given id {ID} does not exist", id);
+                return NotFound($"Team member with given id '{id}' does not exist.");
+            }
+            
+            _service.Remove(teamMember);
 
-        public override AcceptedResult Accepted(string message)
-        {
+            const string message = "Successfully deleted team member.";
             _logger.LogInformation(message);
-            return Accepted(value: message);
+            return Ok(message);
         }
     }
 }
