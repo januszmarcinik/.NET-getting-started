@@ -62,6 +62,31 @@ public void Configure(IApplicationBuilder app)
 }
 ```
 
+``` C#
+[Route("api/team-members")]
+public class TeamMembersController : ControllerBase
+{
+    private readonly ITeamMembersService _service;
+
+    public TeamMembersController(ITeamMembersService service)
+    {
+        _service = service;
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetById(Guid id)
+    {
+        var teamMember = _service.GetById(id);
+        if (teamMember == null)
+        {
+            return NotFound($"Team member with given id '{id}' does not exist.");
+        }
+
+        return Ok(teamMember);
+    }
+}
+```
+
 ### Create [Controller](Controllers/TeamMembersController.cs)
 
 ### Deserialization

@@ -5,8 +5,6 @@ namespace NETCore3.Entities
 {
     public class TeamMember
     {
-       
-
         private string _name;
         private Role _role;
         private int _grade;

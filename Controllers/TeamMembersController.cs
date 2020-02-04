@@ -17,7 +17,7 @@ namespace NETCore3.Controllers
             _service = service;
             _logger = logger;
         }
-
+        
         [HttpGet]
         public IActionResult GetAll() =>
             Ok(_service.GetAll());
