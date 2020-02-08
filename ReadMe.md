@@ -184,11 +184,30 @@ public class TeamMembersController : ControllerBase
 }
 ```
 
-## 6. Exception handler middleware
+## 6. Middleware
+
+Middleware is software that's assembled into an app pipeline to handle requests and responses.
+
+The .NET Core middleware pipeline can be configured using the following methods from `IApplicationBuilder`:
+
+### `Use()`
+Adds a middleware to the pipeline. The component’s code must decide whether to terminate or continue the pipeline. We can add as many Use methods as we want. They will be executed in the order in which they were added to the pipeline. 
+
+### `UseWhen()`
+Extends `Use()` configuration about condition specified in the predicate.  Conditionally creates a branch in the pipeline that is rejoined to the main pipeline (unlike with `MapWhen()`).
+
+### `Map()`
+Branches to appropriate middleware components, based on the incoming request's URL path.
+
+### `MapWhen()`
+Extends `Map()` configuration about condition specified in the predicate.
+
+### `Run()`
+These delegates don't receive a next parameter. The first `Run` delegate terminates the pipeline. Any middleware components added after Run will not be processed.
 
 Once the logger is already defined, we could log each exception in the API, and as a response send back only an error message.
 
-### Middleware registration
+### Exception handler middleware
 ```C#
 public void Configure(IApplicationBuilder app)
 {
