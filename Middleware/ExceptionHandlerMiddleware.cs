@@ -8,12 +8,12 @@ namespace NETCore3.Middleware
 {
     internal class ExceptionHandlerMiddleware
     {
-        private readonly RequestDelegate _request;
+        private readonly RequestDelegate _next;
         private readonly ILogger _logger;
 
-        public ExceptionHandlerMiddleware(RequestDelegate request, ILogger<ExceptionHandlerMiddleware> logger)
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
         {
-            _request = request;
+            _next = next;
             _logger = logger;
         }
 
@@ -21,11 +21,11 @@ namespace NETCore3.Middleware
         {
             try
             {
-                await _request(context);
+                await _next(context);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                _logger.LogError(ex, ex.Message); 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 await context.Response.WriteAsync(ex.Message);
             }

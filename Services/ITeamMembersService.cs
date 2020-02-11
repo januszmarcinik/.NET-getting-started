@@ -10,6 +10,8 @@ namespace NETCore3.Services
         
         IEnumerable<TeamMember> GetAll();
         
+        IEnumerable<TeamMember> GetByRoles(params Role[] roles);
+        
         Guid Add(TeamMember teamMember);
         
         void Update(TeamMember teamMember);

@@ -3,7 +3,8 @@
     public enum Role
     {
         DotNet = 1,
-        JavaScript = 2,
-        DevOps = 3
+        Angular = 2,
+        Java = 3,
+        React = 4
     }
 }

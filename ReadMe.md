@@ -192,20 +192,82 @@ The .NET Core middleware pipeline can be configured using the following methods 
 
 ### `Use()`
 Adds a middleware to the pipeline. The component’s code must decide whether to terminate or continue the pipeline. We can add as many Use methods as we want. They will be executed in the order in which they were added to the pipeline. 
+``` C#
+app.Use(async (context, next) =>
+{
+	logger.LogInformation("Executing middleware...");
+	context.Request.Headers.Add("correlation-id", "7a902997-bcc8-4162-aba8-fffa93d6bfad");
+
+	await next.Invoke();
+
+	logger.LogInformation("Middleware executed.");
+});
+```
 
 ### `UseWhen()`
 Extends `Use()` configuration about condition specified in the predicate.  Conditionally creates a branch in the pipeline that is rejoined to the main pipeline (unlike with `MapWhen()`).
+``` C#
+app.UseWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
+{
+	appBuilder.Use(async (context, next) =>
+	{
+		logger.LogInformation("Executing middleware...");
+		context.Request.Headers.Add("correlation-id", "7a902997-bcc8-4162-aba8-fffa93d6bfad");
+		
+		await next.Invoke();
+
+		logger.LogInformation("Middleware executed.");
+	});
+});
+```
 
 ### `Map()`
 Branches to appropriate middleware components, based on the incoming request's URL path.
+``` C#
+app.Map("/api/branch", appBuilder =>
+{
+	appBuilder.Use(async (context, next) =>
+	{
+		logger.LogInformation("Executing middleware for route '{ApiRoute}'", "api/branch");
+
+		await next.Invoke();
+	});
+	
+	appBuilder
+		.UseRouting()
+		.UseEndpoints(endpoints =>
+		{
+			endpoints.MapControllers();
+		});
+});
+```
 
 ### `MapWhen()`
 Extends `Map()` configuration about condition specified in the predicate.
+``` C#
+app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
+{
+	appBuilder.Use(async (context, next) =>
+	{
+		logger.LogInformation("Executing middleware for route '{ApiRoute}'", "team-members");
+
+		await next.Invoke();
+	});
+});
+```
 
 ### `Run()`
 These delegates don't receive a next parameter. The first `Run` delegate terminates the pipeline. Any middleware components added after Run will not be processed.
-
-Once the logger is already defined, we could log each exception in the API, and as a response send back only an error message.
+``` C#
+app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
+{
+	appBuilder.Run(async context =>
+	{
+		logger.LogError("Endpoint 'team-members' is not allowed while using branched middleware pipeline.");
+		await context.Response.WriteAsync("End of the request.");
+	});
+});
+```
 
 ### Exception handler middleware
 ```C#
@@ -219,24 +281,26 @@ public void Configure(IApplicationBuilder app)
 ```C#
 internal class ExceptionHandlerMiddleware
 {
-	private readonly RequestDelegate _request;
+	private readonly RequestDelegate _next;
 	private readonly ILogger _logger;
 
-	public ExceptionHandlerMiddleware(RequestDelegate request, ILogger<ExceptionHandlerMiddleware> logger)
+	public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
 	{
-		_request = request;
+		_next = next;
 		_logger = logger;
 	}
 
 	public async Task InvokeAsync(HttpContext context)
 	{
+		_logger.LogInformation("ExceptionHandlerMiddleware invoked.");
+		
 		try
 		{
-			await _request(context);
+			await _next(context);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, ex.Message);
+			_logger.LogError(ex, ex.Message); 
 			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 			await context.Response.WriteAsync(ex.Message);
 		}

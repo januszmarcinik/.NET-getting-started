@@ -22,6 +22,12 @@ namespace NETCore3.Services
                 .OrderBy(x => x.Id)
                 .ToList();
 
+        public IEnumerable<TeamMember> GetByRoles(params Role[] roles) =>
+            _teamMembers
+                .Where(x => roles.Contains(x.Role))
+                .OrderBy(x => x.Id)
+                .ToList();
+
         public Guid Add(TeamMember teamMember)
         {
             _teamMembers.Add(teamMember);
@@ -36,5 +42,20 @@ namespace NETCore3.Services
 
         public void Remove(TeamMember teamMember) => 
             _teamMembers.Remove(teamMember);
+
+        public static TeamMembersService CreateDefault()
+        {
+            var initTeamMembers = new[]
+            {
+                new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
+                new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
+                new TeamMember(Guid.NewGuid(), "Robert", Role.Java, 2),
+                new TeamMember(Guid.NewGuid(), "Alex", Role.Angular, 5),
+                new TeamMember(Guid.NewGuid(), "Jack", Role.React, 3),
+                new TeamMember(Guid.NewGuid(), "Tom", Role.Angular, 6)
+            };
+            
+            return new TeamMembersService(initTeamMembers);
+        }
     }
 }
