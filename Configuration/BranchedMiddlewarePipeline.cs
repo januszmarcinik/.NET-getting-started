@@ -16,7 +16,7 @@ namespace NETCore3.Configuration
             {
                 appBuilder.UseWhen(context => context.Request.Path.Value.Contains("backend"), additionalMiddleware =>
                 {
-                    additionalMiddleware.UseMiddleware<ExceptionHandlerMiddleware>();
+                    additionalMiddleware.UseExceptionHandlerMiddleware();
                 });
 
                 appBuilder

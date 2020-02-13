@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -30,5 +31,11 @@ namespace NETCore3.Middleware
                 await context.Response.WriteAsync(ex.Message);
             }
         }
+    }
+
+    internal static class ExceptionHandlerMiddlewareExtensions
+    {
+        public static IApplicationBuilder UseExceptionHandlerMiddleware(this IApplicationBuilder app) =>
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
     }
 }

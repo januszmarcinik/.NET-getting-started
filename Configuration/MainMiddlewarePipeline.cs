@@ -13,7 +13,7 @@ namespace NETCore3.Configuration
         {
             var logger = app.ApplicationServices.GetService<ILogger<Startup>>();
             
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
+            app.UseExceptionHandlerMiddleware();
             
             app.Use(async (context, next) =>
             {
