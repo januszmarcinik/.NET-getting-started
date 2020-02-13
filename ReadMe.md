@@ -1,6 +1,6 @@
 ﻿# .NET Core 3.0 Getting Started
 
-## 1. Define first API endpoint
+# 1. Define first API endpoint
 ``` C#
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
@@ -15,7 +15,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 }
 ```
 
-## 2. Define full REST Api for entity using endpoints
+# 2. Define full REST Api for entity using endpoints
 ``` C#
 app.UseEndpoints(endpoints =>
 {
@@ -43,9 +43,9 @@ app.UseEndpoints(endpoints =>
 ```
 [Full REST Api endpoints configuration](Configuration/TeamMembersEndpoints.cs)
 
-## 3. Define full REST Api for entity using ApiController
+# 3. Define full REST Api for entity using ApiController
 
-### Turn on Controllers support
+## Turn on Controllers support
 ``` C#
 public void ConfigureServices(IServiceCollection services)
 {
@@ -87,13 +87,13 @@ public class TeamMembersController : ControllerBase
 }
 ```
 
-### Create [Controller](Controllers/TeamMembersController.cs)
+## Create [Controller](Controllers/TeamMembersController.cs)
 
-### Deserialization
+## Deserialization
 > The default for ASP.NET Core is now System.Text.Json, which is new in .NET Core 3.0. Consider using System.Text.Json when possible. It's high-performance and doesn't require an additional library dependency. 
 [See docs](https://docs.microsoft.com/pl-pl/aspnet/core/migration/22-to-30?view=aspnetcore-3.0&tabs=visual-studio#jsonnet-support)
 
-### Switch to Newtonsoft.JSON
+## Switch to Newtonsoft.JSON
 To use Json.NET in an ASP.NET Core 3.0 project:
 - Add a package reference to ``Microsoft.AspNetCore.Mvc.NewtonsoftJson``.
 ``` XML
@@ -110,9 +110,9 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-## 4. Define health check
+# 4. Define health check
 
-### Turn on health checks
+## Turn on health checks
 ``` C#
 public void ConfigureServices(IServiceCollection services)
 {
@@ -129,7 +129,7 @@ public void Configure(IApplicationBuilder app)
 }
 ```
 
-## 5. Logging
+# 5. Logging
 
 >.NET Core supports a logging API that works with a variety of built-in and third-party logging providers.  
 
@@ -153,7 +153,7 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 		// ...
 ```
 
-### Create logs - usage
+## Create logs - usage
 ```C#
 [Route("api/team-members")]
 public class TeamMembersController : ControllerBase
@@ -184,13 +184,13 @@ public class TeamMembersController : ControllerBase
 }
 ```
 
-## 6. Middleware
+# 6. Middleware
 
 Middleware is software that's assembled into an app pipeline to handle requests and responses.
 
 The .NET Core middleware pipeline can be configured using the following methods from `IApplicationBuilder`:
 
-### `Use()`
+## `Use()`
 Adds a middleware to the pipeline. The component’s code must decide whether to terminate or continue the pipeline. We can add as many Use methods as we want. They will be executed in the order in which they were added to the pipeline. 
 ``` C#
 app.Use(async (context, next) =>
@@ -204,7 +204,7 @@ app.Use(async (context, next) =>
 });
 ```
 
-### `UseWhen()`
+## `UseWhen()`
 Extends `Use()` configuration about condition specified in the predicate.  Conditionally creates a branch in the pipeline that is rejoined to the main pipeline (unlike with `MapWhen()`).
 ``` C#
 app.UseWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
@@ -221,7 +221,7 @@ app.UseWhen(context => context.Request.Path.Value.Contains("team-members"), appB
 });
 ```
 
-### `Map()`
+## `Map()`
 Branches to appropriate middleware components, based on the incoming request's URL path.
 ``` C#
 app.Map("/api/branch", appBuilder =>
@@ -242,7 +242,7 @@ app.Map("/api/branch", appBuilder =>
 });
 ```
 
-### `MapWhen()`
+## `MapWhen()`
 Extends `Map()` configuration about condition specified in the predicate.
 ``` C#
 app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
@@ -256,7 +256,7 @@ app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appB
 });
 ```
 
-### `Run()`
+## `Run()`
 These delegates don't receive a next parameter. The first `Run` delegate terminates the pipeline. Any middleware components added after Run will not be processed.
 ``` C#
 app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
@@ -269,7 +269,7 @@ app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appB
 });
 ```
 
-### Exception handler middleware
+## Exception handler middleware
 ```C#
 public void Configure(IApplicationBuilder app)
 {
@@ -308,9 +308,9 @@ internal class ExceptionHandlerMiddleware
 }
 ```
 
-## 7. Override default logger (Serilog)
+# 7. Override default logger (Serilog)
 
-### Add required packages to ``.csproj`` file
+## Add required packages to ``.csproj`` file
 ```XML
 <PackageReference Include="Serilog" Version="2.9.0" />
 <PackageReference Include="Serilog.AspNetCore" Version="3.1.0" />
@@ -321,7 +321,7 @@ internal class ExceptionHandlerMiddleware
 
 That's why we can safely remove ``Logging`` configuration from ``appsettings.json``.
 
-### Creating an instance of the logger
+## Creating an instance of the logger
 ```c#
 public static void Main(string[] args)
 {
@@ -344,9 +344,18 @@ public static void Main(string[] args)
 		Log.CloseAndFlush();
 	}
 }
+
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+	Host.CreateDefaultBuilder(args)
+		.UseSerilog()
+		.ConfigureLogging(logging =>
+		{
+			logging.ClearProviders();
+			logging.AddConsole();
+		});
 ```
 
-### Add HTTP Request logging
+## Add HTTP Request logging
 ```C#
 public void Configure(IApplicationBuilder app)
 {
@@ -358,15 +367,40 @@ Example:
 [14:54:49 INF] HTTP POST /api/team-members responded 202 in 468.0278 ms
 ```
 
-## 8. Replace default dependency injection container to Autofac
+# 8. Attach **Seq** as tool for storing structured logs
 
-### Reference nuget packages
+## Pull docker image with **Seq**
+>docker pull datalust/seq
+
+## Run Seq instance
+### Empheral storage 
+>docker run -e ACCEPT_EULA=Y -p 5341:80 datalust/seq:latest
+### Stable storage
+>docker run -e ACCEPT_EULA=Y -v C:/Seq/data:/data -p 5341:80 datalust/seq:latest
+
+## Add required packages to ``.csproj`` file
+```XML
+<PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+```
+
+## Add Seq sink to Serilog
+``` C#
+Log.Logger = new LoggerConfiguration()
+	.Enrich.FromLogContext()
+	.WriteTo.Console()
+	.WriteTo.Seq("http://localhost:5341") // default Seq port
+	.CreateLogger();
+```
+
+# 9. Replace default dependency injection container to Autofac
+
+## Reference nuget packages
 ```XML
 <PackageReference Include="Autofac" Version="4.9.4" />
 <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
 ```
 
-### Override the factory used to create the service provider
+## Override the factory used to create the service provider
 ```C#
 public static IHostBuilder CreateHostBuilder(string[] args) =>
 	Host.CreateDefaultBuilder(args)
@@ -374,7 +408,9 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 		// ...
 ```
 
-### Move services registration to additional ``Startup`` method called ``ConfigureContainer``
+
+
+## Move services registration to additional ``Startup`` method called ``ConfigureContainer``
 ```C#
 public void ConfigureContainer(ContainerBuilder builder)
 {
@@ -410,12 +446,12 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ```
 
 
-## 9.
+# 9.
 
-## 10.
+# 10.
 
 
-#### TODO:
+### TODO:
 - Swagger
 - SignalR
 - MVC

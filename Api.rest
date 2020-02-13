@@ -12,7 +12,7 @@ GET {{api_url}}/api/team-members
 Content-Type: application/json
 
 ### Get backend team members
-GET {{api_url}}/api/role/backend/error
+GET {{api_url}}/api/role/backend
 
 ### Get frontend team members
 GET {{api_url}}/api/role/frontend
