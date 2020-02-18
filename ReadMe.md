@@ -4,14 +4,14 @@
 ``` C#
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
-	app.UseRouting()
-		.UseEndpoints(endpoints =>
-		{
-			endpoints.MapGet("/api", async context =>
-			{
-				await context.Response.WriteAsync($"API is running on {env.EnvironmentName} environment");
-			});
-		});
+    app.UseRouting()
+        .UseEndpoints(endpoints =>
+        {
+            endpoints.MapGet("/api", async context =>
+            {
+                await context.Response.WriteAsync($"API is running on {env.EnvironmentName} environment");
+            });
+        });
 }
 ```
 
@@ -19,26 +19,26 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ``` C#
 app.UseEndpoints(endpoints =>
 {
-	var service = endpoints.ServiceProvider.GetService<ITeamMembersService>();
+    var service = endpoints.ServiceProvider.GetService<ITeamMembersService>();
 
-	// ...
-	endpoints.MapGet($"{UrlPrefix}/{{id}}", async context =>
-	{
-		var id = GetIdFromRoute(context.Request.RouteValues["id"]);
-		var teamMember = service.GetById(id);
+    // ...
+    endpoints.MapGet($"{UrlPrefix}/{{id}}", async context =>
+    {
+        var id = GetIdFromRoute(context.Request.RouteValues["id"]);
+        var teamMember = service.GetById(id);
 
-		await context.WriteOk(teamMember);
-	});
+        await context.WriteOk(teamMember);
+    });
 
-	endpoints.MapPost(UrlPrefix, async context =>
-	{
-		var command = await context.GetObjectFromBody<TeamMember>();
-		var id = service.Add(command);
+    endpoints.MapPost(UrlPrefix, async context =>
+    {
+        var command = await context.GetObjectFromBody<TeamMember>();
+        var id = service.Add(command);
 
-		await context.WriteAccepted($"Successfully created team member with id '{id}'.");
-	});
+        await context.WriteAccepted($"Successfully created team member with id '{id}'.");
+    });
 
-	// ...
+    // ...
 });
 ```
 [Full REST Api endpoints configuration](Configuration/TeamMembersEndpoints.cs)
@@ -49,16 +49,16 @@ app.UseEndpoints(endpoints =>
 ``` C#
 public void ConfigureServices(IServiceCollection services)
 {
-	services.AddControllers();
+    services.AddControllers();
 }
 
 public void Configure(IApplicationBuilder app)
 {
-	app.UseRouting()
-		.UseEndpoints(endpoints =>
-		{
-			endpoints.MapControllers();
-		});
+    app.UseRouting()
+        .UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
 }
 ```
 
@@ -90,7 +90,7 @@ public class TeamMembersController : ControllerBase
 ## Create [Controller](Controllers/TeamMembersController.cs)
 
 ## Deserialization
-> The default for ASP.NET Core is now System.Text.Json, which is new in .NET Core 3.0. Consider using System.Text.Json when possible. It's high-performance and doesn't require an additional library dependency. 
+> The default for ASP.NET Core is now System.Text.Json, which is new in .NET Core 3.0. Consider using System.Text.Json when possible. It's high-performance and doesn't require an additional library dependency.
 [See docs](https://docs.microsoft.com/pl-pl/aspnet/core/migration/22-to-30?view=aspnetcore-3.0&tabs=visual-studio#jsonnet-support)
 
 ## Switch to Newtonsoft.JSON
@@ -103,10 +103,10 @@ To use Json.NET in an ASP.NET Core 3.0 project:
 ``` C#
 public void ConfigureServices(IServiceCollection services)
 {
-	services.AddControllers()
-		.AddNewtonsoftJson(options =>
-			options.SerializerSettings.ContractResolver =
-				new CamelCasePropertyNamesContractResolver());
+    services.AddControllers()
+        .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver());
 }
 ```
 
@@ -116,26 +116,26 @@ public void ConfigureServices(IServiceCollection services)
 ``` C#
 public void ConfigureServices(IServiceCollection services)
 {
-	services.AddHealthChecks();
+    services.AddHealthChecks();
 }
 
 public void Configure(IApplicationBuilder app)
 {
-	app.UseRouting()
-		.UseEndpoints(endpoints =>
-		{
-			endpoints.MapHealthChecks("/health");
-		});
+    app.UseRouting()
+        .UseEndpoints(endpoints =>
+        {
+            endpoints.MapHealthChecks("/health");
+        });
 }
 ```
 
 # 5. Logging
 
->.NET Core supports a logging API that works with a variety of built-in and third-party logging providers.  
+>.NET Core supports a logging API that works with a variety of built-in and third-party logging providers.
 
 There is an abstraction for it: ``ILogger<TCategoryName>``
 
-The default ASP.NET Core project templates call CreateDefaultBuilder, which adds the following logging providers:  
+The default ASP.NET Core project templates call CreateDefaultBuilder, which adds the following logging providers:
 - Console
 - Debug
 - EventSource
@@ -144,13 +144,13 @@ The default ASP.NET Core project templates call CreateDefaultBuilder, which adds
 You can replace the default providers with your own choices. Call ``ClearProviders``, and add the providers you want.
 ```C#
 public static IHostBuilder CreateHostBuilder(string[] args) =>
-	Host.CreateDefaultBuilder(args)
-		.ConfigureLogging(logging =>
-		{
-			logging.ClearProviders();
-			logging.AddConsole();
-		})
-		// ...
+    Host.CreateDefaultBuilder(args)
+        .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddConsole();
+        })
+        // ...
 ```
 
 ## Create logs - usage
@@ -158,29 +158,29 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 [Route("api/team-members")]
 public class TeamMembersController : ControllerBase
 {
-	private readonly ITeamMembersService _service;
-	private readonly ILogger _logger;
+    private readonly ITeamMembersService _service;
+    private readonly ILogger _logger;
 
-	public TeamMembersController(ITeamMembersService service, ILogger<TeamMembersController> logger)
-	{
-		_service = service;
-		_logger = logger;
-	}
+    public TeamMembersController(ITeamMembersService service, ILogger<TeamMembersController> logger)
+    {
+        _service = service;
+        _logger = logger;
+    }
 
-	// ...
+    // ...
 
-	[HttpPost]
-	public IActionResult Post([FromBody] TeamMember teamMember)
-	{
-		var id = _service.Add(teamMember);
-		return Accepted($"Successfully created team member with id '{id}'.");
-	}
+    [HttpPost]
+    public IActionResult Post([FromBody] TeamMember teamMember)
+    {
+        var id = _service.Add(teamMember);
+        return Accepted($"Successfully created team member with id '{id}'.");
+    }
 
-	public override AcceptedResult Accepted(string message)
-	{
-		_logger.LogDebug(message);
-		return Accepted(value: message);
-	}
+    public override AcceptedResult Accepted(string message)
+    {
+        _logger.LogDebug(message);
+        return Accepted(value: message);
+    }
 }
 ```
 
@@ -191,16 +191,16 @@ Middleware is software that's assembled into an app pipeline to handle requests 
 The .NET Core middleware pipeline can be configured using the following methods from `IApplicationBuilder`:
 
 ## `Use()`
-Adds a middleware to the pipeline. The component’s code must decide whether to terminate or continue the pipeline. We can add as many Use methods as we want. They will be executed in the order in which they were added to the pipeline. 
+Adds a middleware to the pipeline. The component’s code must decide whether to terminate or continue the pipeline. We can add as many Use methods as we want. They will be executed in the order in which they were added to the pipeline.
 ``` C#
 app.Use(async (context, next) =>
 {
-	logger.LogInformation("Executing middleware...");
-	context.Request.Headers.Add("correlation-id", "7a902997-bcc8-4162-aba8-fffa93d6bfad");
+    logger.LogInformation("Executing middleware...");
+    context.Request.Headers.Add("correlation-id", "7a902997-bcc8-4162-aba8-fffa93d6bfad");
 
-	await next.Invoke();
+    await next.Invoke();
 
-	logger.LogInformation("Middleware executed.");
+    logger.LogInformation("Middleware executed.");
 });
 ```
 
@@ -209,15 +209,15 @@ Extends `Use()` configuration about condition specified in the predicate.  Condi
 ``` C#
 app.UseWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
 {
-	appBuilder.Use(async (context, next) =>
-	{
-		logger.LogInformation("Executing middleware...");
-		context.Request.Headers.Add("correlation-id", "7a902997-bcc8-4162-aba8-fffa93d6bfad");
-		
-		await next.Invoke();
+    appBuilder.Use(async (context, next) =>
+    {
+        logger.LogInformation("Executing middleware...");
+        context.Request.Headers.Add("correlation-id", "7a902997-bcc8-4162-aba8-fffa93d6bfad");
 
-		logger.LogInformation("Middleware executed.");
-	});
+        await next.Invoke();
+
+        logger.LogInformation("Middleware executed.");
+    });
 });
 ```
 
@@ -226,19 +226,19 @@ Branches to appropriate middleware components, based on the incoming request's U
 ``` C#
 app.Map("/api/branch", appBuilder =>
 {
-	appBuilder.Use(async (context, next) =>
-	{
-		logger.LogInformation("Executing middleware for route '{ApiRoute}'", "api/branch");
+    appBuilder.Use(async (context, next) =>
+    {
+        logger.LogInformation("Executing middleware for route '{ApiRoute}'", "api/branch");
 
-		await next.Invoke();
-	});
-	
-	appBuilder
-		.UseRouting()
-		.UseEndpoints(endpoints =>
-		{
-			endpoints.MapControllers();
-		});
+        await next.Invoke();
+    });
+
+    appBuilder
+        .UseRouting()
+        .UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
 });
 ```
 
@@ -247,12 +247,12 @@ Extends `Map()` configuration about condition specified in the predicate.
 ``` C#
 app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
 {
-	appBuilder.Use(async (context, next) =>
-	{
-		logger.LogInformation("Executing middleware for route '{ApiRoute}'", "team-members");
+    appBuilder.Use(async (context, next) =>
+    {
+        logger.LogInformation("Executing middleware for route '{ApiRoute}'", "team-members");
 
-		await next.Invoke();
-	});
+        await next.Invoke();
+    });
 });
 ```
 
@@ -261,11 +261,11 @@ These delegates don't receive a next parameter. The first `Run` delegate termina
 ``` C#
 app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
 {
-	appBuilder.Run(async context =>
-	{
-		logger.LogError("Endpoint 'team-members' is not allowed while using branched middleware pipeline.");
-		await context.Response.WriteAsync("End of the request.");
-	});
+    appBuilder.Run(async context =>
+    {
+        logger.LogError("Endpoint 'team-members' is not allowed while using branched middleware pipeline.");
+        await context.Response.WriteAsync("End of the request.");
+    });
 });
 ```
 
@@ -273,7 +273,7 @@ app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appB
 ```C#
 public void Configure(IApplicationBuilder app)
 {
-	app.UseMiddleware<ExceptionHandlerMiddleware>();
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
 }
 ```
 
@@ -281,30 +281,30 @@ public void Configure(IApplicationBuilder app)
 ```C#
 internal class ExceptionHandlerMiddleware
 {
-	private readonly RequestDelegate _next;
-	private readonly ILogger _logger;
+    private readonly RequestDelegate _next;
+    private readonly ILogger _logger;
 
-	public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
-	{
-		_next = next;
-		_logger = logger;
-	}
+    public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
 
-	public async Task InvokeAsync(HttpContext context)
-	{
-		_logger.LogInformation("ExceptionHandlerMiddleware invoked.");
-		
-		try
-		{
-			await _next(context);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, ex.Message); 
-			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-			await context.Response.WriteAsync(ex.Message);
-		}
-	}
+    public async Task InvokeAsync(HttpContext context)
+    {
+        _logger.LogInformation("ExceptionHandlerMiddleware invoked.");
+
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsync(ex.Message);
+        }
+    }
 }
 ```
 
@@ -325,41 +325,41 @@ That's why we can safely remove ``Logging`` configuration from ``appsettings.jso
 ```c#
 public static void Main(string[] args)
 {
-	Log.Logger = new LoggerConfiguration()
-		.Enrich.FromLogContext()
-		.WriteTo.Console()
-		.CreateLogger();
+    Log.Logger = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .CreateLogger();
 
-	try
-	{
-		Log.Information("Starting up");
-		CreateHostBuilder(args).Build().Run();
-	}
-	catch (Exception ex)
-	{
-		Log.Fatal(ex, "Host builder error");
-	}
-	finally
-	{
-		Log.CloseAndFlush();
-	}
+    try
+    {
+        Log.Information("Starting up");
+        CreateHostBuilder(args).Build().Run();
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "Host builder error");
+    }
+    finally
+    {
+        Log.CloseAndFlush();
+    }
 }
 
 public static IHostBuilder CreateHostBuilder(string[] args) =>
-	Host.CreateDefaultBuilder(args)
-		.UseSerilog()
-		.ConfigureLogging(logging =>
-		{
-			logging.ClearProviders();
-			logging.AddConsole();
-		});
+    Host.CreateDefaultBuilder(args)
+        .UseSerilog()
+        .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddConsole();
+        });
 ```
 
 ## Add HTTP Request logging
 ```C#
 public void Configure(IApplicationBuilder app)
 {
-	app.UseSerilogRequestLogging();
+    app.UseSerilogRequestLogging();
 }
 ```
 Example:
@@ -373,7 +373,7 @@ Example:
 >docker pull datalust/seq
 
 ## Run Seq instance
-### Empheral storage 
+### Empheral storage
 >docker run -e ACCEPT_EULA=Y -p 5341:80 datalust/seq:latest
 ### Stable storage
 >docker run -e ACCEPT_EULA=Y -v C:/Seq/data:/data -p 5341:80 datalust/seq:latest
@@ -386,10 +386,10 @@ Example:
 ## Add Seq sink to Serilog
 ``` C#
 Log.Logger = new LoggerConfiguration()
-	.Enrich.FromLogContext()
-	.WriteTo.Console()
-	.WriteTo.Seq("http://localhost:5341") // default Seq port
-	.CreateLogger();
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341") // default Seq port
+    .CreateLogger();
 ```
 
 # 9. Replace default dependency injection container to Autofac
@@ -403,9 +403,9 @@ Log.Logger = new LoggerConfiguration()
 ## Override the factory used to create the service provider
 ```C#
 public static IHostBuilder CreateHostBuilder(string[] args) =>
-	Host.CreateDefaultBuilder(args)
-		.UseServiceProviderFactory(new AutofacServiceProviderFactory())
-		// ...
+    Host.CreateDefaultBuilder(args)
+        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+        // ...
 ```
 
 
@@ -414,24 +414,24 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 ```C#
 public void ConfigureContainer(ContainerBuilder builder)
 {
-	builder
-		.Register(factory =>
-		{
-			var initTeamMembers = new[]
-			{
-				new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
-				new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
-				new TeamMember(Guid.NewGuid(), "Robert", Role.JavaScript, 2),
-				new TeamMember(Guid.NewGuid(), "Alex", Role.DevOps, 5)
-			};
-			return new TeamMembersService(initTeamMembers);
-		})
-		.As<ITeamMembersService>()
-		.SingleInstance();
+    builder
+        .Register(factory =>
+        {
+            var initTeamMembers = new[]
+            {
+                new TeamMember(Guid.NewGuid(), "John", Role.DotNet, 5),
+                new TeamMember(Guid.NewGuid(), "Franc", Role.DotNet, 6),
+                new TeamMember(Guid.NewGuid(), "Robert", Role.JavaScript, 2),
+                new TeamMember(Guid.NewGuid(), "Alex", Role.DevOps, 5)
+            };
+            return new TeamMembersService(initTeamMembers);
+        })
+        .As<ITeamMembersService>()
+        .SingleInstance();
 }
 ```
-> ConfigureContainer is where you can register things directly with Autofac.  
-This runs after ConfigureServices so the things here will override registrations made in ConfigureServices.  
+> ConfigureContainer is where you can register things directly with Autofac.
+This runs after ConfigureServices so the things here will override registrations made in ConfigureServices.
 Don't build the container - that gets done for you by the factory.
 
 > **HINT:** If, for some reason, you need a reference to the built container, you can use the convenience extension method ``GetAutofacRoot``.
@@ -440,8 +440,8 @@ public ILifetimeScope AutofacContainer { get; private set; }
 
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
-	
-	AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
+    AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 }
 ```
 
