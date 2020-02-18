@@ -111,6 +111,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 # 4. Define health check
+Check an app's status, thanks to health checks exposed by HTTP endpoints.
 
 ## Turn on health checks
 ``` C#
@@ -127,6 +128,59 @@ public void Configure(IApplicationBuilder app)
             endpoints.MapHealthChecks("/health");
         });
 }
+```
+```
+GET http://localhost:5000/health
+
+HTTP/1.1 200 OK 
+Connection: close 
+Date: Tue, 18 Feb 2020 17:01:20 GMT 
+Content-Type: text/plain 
+Server: Kestrel 
+Cache-Control: no-store, no-cache 
+Pragma: no-cache 
+Transfer-Encoding: chunked 
+Expires: Thu, 01 Jan 1970 00:00:00 GMT 
+
+Healthy
+```
+
+## Custom health check
+There is possibilty to define a set of health checks in pipeline.
+
+``` C#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddHealthChecks()
+        .AddCheck<TeamMembersHealthCheck>("Team members health check");
+}
+```
+
+``` C#
+internal class TeamMembersHealthCheck : IHealthCheck
+{
+    private readonly ITeamMembersService _service;
+
+    public TeamMembersHealthCheck(ITeamMembersService service)
+    {
+        _service = service;
+    }
+    
+    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+    {
+        var isHealthy = _service.GetAll().Any();
+        if (isHealthy)
+        {
+            return Task.FromResult(HealthCheckResult.Healthy("Team members contains at least one element."));
+        }
+
+        return Task.FromResult(HealthCheckResult.Unhealthy("There are no team members registered..."));
+    }
+}
+```
+
+```
+[18:30:31 ERR] Health check Team members health check completed after 0.3627ms with status Unhealthy and 'There are no team members registered...'
 ```
 
 # 5. Logging
@@ -440,23 +494,17 @@ public ILifetimeScope AutofacContainer { get; private set; }
 
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
-
     AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 }
 ```
-
 
 # 9.
 
 # 10.
 
-
 ### TODO:
 - Swagger
 - SignalR
-- MVC
-- Razor
-- Blazor
 - Authentication
 - Authorization
 - CORS

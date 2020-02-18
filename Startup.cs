@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NETCore3.Configuration;
+using NETCore3.HealthChecks;
 using NETCore3.Services;
 using Newtonsoft.Json.Serialization;
 using Serilog;
@@ -21,7 +22,8 @@ namespace NETCore3
                     options.SerializerSettings.ContractResolver =
                         new CamelCasePropertyNamesContractResolver());
 
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddCheck<TeamMembersHealthCheck>("Team members health check");
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

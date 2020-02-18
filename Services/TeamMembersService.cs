@@ -57,5 +57,7 @@ namespace NETCore3.Services
             
             return new TeamMembersService(initTeamMembers);
         }
+        
+        public static TeamMembersService CreateEmpty() => new TeamMembersService();
     }
 }
