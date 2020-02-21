@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using NETCore3.Entities;
 using NETCore3.Services;
 
@@ -17,6 +18,7 @@ namespace NETCore3.Controllers
         [HttpGet("")]
         public IActionResult Get()
         {
+            //throw new NotImplementedException("Not implemented in FrontendController");
             var frontend = _teamMembersService.GetByRoles(Role.Angular, Role.React); 
             return Ok(frontend);
         }

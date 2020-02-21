@@ -29,17 +29,17 @@ namespace NETCore3.Configuration
             
             app.MapWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
             {
-                appBuilder.Run(async context =>
+                appBuilder.Use((context, next) =>
                 {
-                    logger.LogError("Endpoint 'team-members' is not allowed while using branched middleware pipeline.");
-                    await context.Response.WriteAsync("End of the request.");
+                    logger.LogWarning("Endpoint 'team-members' is not allowed while using branched middleware pipeline.");
+                    return next.Invoke();
                 });
             });
 
-            app.Use((context, next) =>
+            app.Run(async context =>
             {
-                logger.LogWarning("Any branched route has not been mapped.");
-                return next.Invoke();
+                logger.LogError("Any branched route has not been mapped.");
+                await context.Response.WriteAsync("End of the request.");
             });
 
             return app;
