@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NETCore3.Configuration;
 using NETCore3.HealthChecks;
+using NETCore3.Middleware;
 using NETCore3.Services;
 using Newtonsoft.Json.Serialization;
 using Serilog;
@@ -36,6 +37,7 @@ namespace NETCore3
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRequestDecorationMiddleware();
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
             app.UseSerilogRequestLogging();
