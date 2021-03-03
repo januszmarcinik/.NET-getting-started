@@ -362,6 +362,30 @@ internal class ExceptionHandlerMiddleware
 }
 ```
 
+## Injecting services into middleware
+Because middleware is constructed at app startup, not per-request, scoped lifetime services used by middleware constructors aren't shared with other dependency-injected types during each request. Because of this, your scoped services should be injected into method, but singletons into ctors.
+```C#
+internal class CorrelationIdMiddleware
+{
+    private readonly CorrelationIdProvider _staticCorrelationIdMiddleware;
+
+    // It will serve still same instance, because middleware is constructed at app startup
+    public CorrelationIdMiddleware(CorrelationIdProvider staticCorrelationIdMiddleware)
+    {
+        _staticCorrelationIdMiddleware = staticCorrelationIdMiddleware;
+    }
+
+    // It will serve new instance for each request
+    public Task InvokeAsync(HttpContext context, CorrelationIdProvider scopedCorrelationIdProvider)
+    {
+        _logger.LogInformation("Static correlation ID: {CorrelationId}", _staticCorrelationIdMiddleware.CorrelationId);
+        context.Request.Headers.Add("correlation-id", $"{scopedCorrelationIdProvider.CorrelationId}");
+        
+        return _next.Invoke(context);
+    }
+}
+```
+
 # 7. Override default logger (Serilog)
 
 ## Add required packages to ``.csproj`` file
