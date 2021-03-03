@@ -33,6 +33,10 @@ namespace NETCore3
                 .Register(_ => TeamMembersService.CreateDefault())
                 .As<ITeamMembersService>()
                 .SingleInstance();
+
+            builder
+                .RegisterType<CorrelationIdProvider>()
+                .InstancePerLifetimeScope();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
