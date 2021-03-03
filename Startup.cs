@@ -42,16 +42,16 @@ namespace NETCore3
 
             app.UseSerilogRequestLogging();
 
-            //app.UseMainMiddlewarePipeline();
-            app.UseBranchedMiddlewarePipeline();
+            app.UseMainMiddlewarePipeline();
+            //app.UseBranchedMiddlewarePipeline();
 
             app.UseRouting()
                 .UseApiInfoEndpoint(env)
-                //.UseTeamMembersEndpoints()
+                .UseTeamMembersEndpoints()
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapHealthChecks("/health");
-                    endpoints.MapControllers();
+                    //endpoints.MapControllers();
                 });
         }
     }

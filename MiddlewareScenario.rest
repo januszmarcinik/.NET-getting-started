@@ -1,0 +1,28 @@
+@api_url = http://localhost:5000
+
+
+# MainMiddlewarePipeline - uncomment middleware
+
+### 1. Standard call - just time measurements
+GET {{api_url}}/api
+
+### 2. With team-members path in route - add correlation id
+GET {{api_url}}/api/team-members
+Content-Type: application/json
+
+
+
+# BranchedMiddlewarePipeline - change middleware, uncomment throws for roles
+
+### 3. Get backend team members should throw error decorated with exception handler middleware
+GET {{api_url}}/api/role/backend
+
+### 4. Get frontend team members should throw not handled error
+GET {{api_url}}/api/role/frontend
+
+### 5. With team-members path in route should invoke warning
+GET {{api_url}}/api/team-members
+Content-Type: application/json
+
+### 6. Standard call should log error - out of branches
+GET {{api_url}}/api
