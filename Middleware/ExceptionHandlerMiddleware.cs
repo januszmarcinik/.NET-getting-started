@@ -26,7 +26,7 @@ namespace NETCore3.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message); 
+                _logger.LogError("Error caught in exception handler middleware with message {Message}", ex.Message); 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 await context.Response.WriteAsync(ex.Message);
             }

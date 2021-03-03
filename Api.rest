@@ -37,11 +37,11 @@ PUT {{api_url}}/api/team-members HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "33eb9a1c-33f0-4533-954a-2e880d06f8c0",
+    "id": "9169d61a-613c-4e4e-a1bb-e8ae9b5562e3",
     "name": "Jonass",
-    "role": "JavaScript",
+    "role": "1",
     "grade": "9"
 }
 
 ### Delete team member
-DELETE {{api_url}}/api/team-members/cea26791-948f-4b2d-99a3-328eb6941f81 HTTP/1.1
+DELETE {{api_url}}/api/team-members/9169d61a-613c-4e4e-a1bb-e8ae9b5562e3 HTTP/1.1
