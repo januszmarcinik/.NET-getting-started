@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,11 +28,7 @@ namespace NETCore3.Configuration
 
             app.UseWhen(context => context.Request.Path.Value.Contains("team-members"), appBuilder =>
             {
-                appBuilder.Use(async (context, next) =>
-                {
-                    context.Request.Headers.Add("correlation-id", $"{Guid.NewGuid()}");
-                    await next.Invoke();
-                });
+                appBuilder.UseCorrelationIdMiddleware();
             });
 
             app.Use(async (context, next) =>
