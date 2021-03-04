@@ -362,6 +362,22 @@ internal class ExceptionHandlerMiddleware
 }
 ```
 
+## Registering middlewares using extensions, as a good pattern
+It's a good pattern because allow to keep configuration in same file as middleware, and makes configure method from Startup.cs easier to read.
+```C#
+internal static class CorrelationIdMiddlewareExtensions
+{
+    public static IApplicationBuilder UseCorrelationIdMiddleware(
+       this IApplicationBuilder app) => app.UseMiddleware<CorrelationIdMiddleware>();
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseCorrelationIdMiddleware();
+}
+
+```
+
 ## Injecting services into middleware
 Because middleware is constructed at app startup, not per-request, scoped lifetime services used by middleware constructors aren't shared with other dependency-injected types during each request. Because of this, your scoped services should be injected into method, but singletons into ctors.
 ```C#
