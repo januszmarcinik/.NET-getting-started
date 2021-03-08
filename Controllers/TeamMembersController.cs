@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NETCore3.Entities;
-using NETCore3.Services;
+using NET.GettingStarted.Entities;
+using NET.GettingStarted.Services;
 
-namespace NETCore3.Controllers
+namespace NET.GettingStarted.Controllers
 {
     [Route("api/team-members")]
     public class TeamMembersController : ControllerBase

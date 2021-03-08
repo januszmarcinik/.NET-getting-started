@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using NETCore3.Entities;
-using NETCore3.Extensions;
-using NETCore3.Services;
+using NET.GettingStarted.Entities;
+using NET.GettingStarted.Services;
+using NET.GettingStarted.Extensions;
 
-namespace NETCore3.Configuration
+namespace NET.GettingStarted.Configuration
 {
     internal static class TeamMembersEndpoints
     {

@@ -3,14 +3,14 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using NETCore3.Configuration;
-using NETCore3.HealthChecks;
-using NETCore3.Middleware;
-using NETCore3.Services;
+using NET.GettingStarted.HealthChecks;
+using NET.GettingStarted.Services;
+using NET.GettingStarted.Configuration;
+using NET.GettingStarted.Middleware;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 
-namespace NETCore3
+namespace NET.GettingStarted
 {
     public class Startup
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETCore3", "NETCore3.csproj", "{42A138DA-5A22-4E9B-8E17-8CCF070A34D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET.GettingStarted", "NET.GettingStarted.csproj", "{42A138DA-5A22-4E9B-8E17-8CCF070A34D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

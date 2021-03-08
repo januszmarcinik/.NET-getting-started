@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using NETCore3.Services;
+using NET.GettingStarted.Services;
 
-namespace NETCore3.HealthChecks
+namespace NET.GettingStarted.HealthChecks
 {
     internal class TeamMembersHealthCheck : IHealthCheck
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace NETCore3.Entities
+namespace NET.GettingStarted.Entities
 {
     public class TeamMember
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NETCore3.Entities;
+using NET.GettingStarted.Entities;
 
-namespace NETCore3.Services
+namespace NET.GettingStarted.Services
 {
     internal class TeamMembersService : ITeamMembersService
     {

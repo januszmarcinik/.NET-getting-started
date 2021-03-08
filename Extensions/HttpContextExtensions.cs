@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace NETCore3.Extensions
+namespace NET.GettingStarted.Extensions
 {
     internal static class HttpContextExtensions
     {

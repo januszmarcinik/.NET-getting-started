@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NETCore3.Services
+namespace NET.GettingStarted.Services
 {
     public class CorrelationIdProvider
     {

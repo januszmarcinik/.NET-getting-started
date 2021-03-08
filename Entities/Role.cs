@@ -1,4 +1,4 @@
-﻿namespace NETCore3.Entities
+﻿namespace NET.GettingStarted.Entities
 {
     public enum Role
     {

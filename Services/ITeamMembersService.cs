@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NETCore3.Entities;
+using NET.GettingStarted.Entities;
 
-namespace NETCore3.Services
+namespace NET.GettingStarted.Services
 {
     public interface ITeamMembersService
     {

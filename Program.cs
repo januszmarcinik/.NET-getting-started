@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace NETCore3
+namespace NET.GettingStarted
 {
     public class Program
     {

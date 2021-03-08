@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using NETCore3.Services;
+using NET.GettingStarted.Services;
 
-namespace NETCore3.Middleware
+namespace NET.GettingStarted.Middleware
 {
     internal class CorrelationIdMiddleware
     {

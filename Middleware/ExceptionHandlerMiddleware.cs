@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace NETCore3.Middleware
+namespace NET.GettingStarted.Middleware
 {
     internal class ExceptionHandlerMiddleware
     {

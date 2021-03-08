@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace NETCore3.Configuration
+namespace NET.GettingStarted.Configuration
 {
     internal static class ApiInfoEndpoint
     {

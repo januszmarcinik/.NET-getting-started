@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NETCore3.Middleware;
+using NET.GettingStarted.Middleware;
 
-namespace NETCore3.Configuration
+namespace NET.GettingStarted.Configuration
 {
     public static class BranchedMiddlewarePipeline
     {
