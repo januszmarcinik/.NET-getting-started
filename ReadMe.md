@@ -238,6 +238,25 @@ public class TeamMembersController : ControllerBase
 }
 ```
 
+## Rules of logging
+- Do NOT use Serilog or any other Logger directly. Instead, use ILogger<T> abstraction from .NET framework,
+- Do NOT use comma in messages. Log event messages should be fragments, not sentences. 
+- USE arguments as parameters
+```C#
+public void DoSomething(TeamMember teamMember)
+{
+    try
+    {
+        _dbContext.Add(teamMember);
+        _dbContext.SaveChanges();
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error occurred during adding member {Name} with grade {Grade}", teamMember.Name, teamMember.Grade);
+    }
+}
+```
+
 # 6. Middleware
 
 Middleware is software that's assembled into an app pipeline to handle requests and responses.
